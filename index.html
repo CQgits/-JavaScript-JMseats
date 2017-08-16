@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>剧场排座插件</title>
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<script src="src/seat.js"></script>
+
+	<style>
+		body {
+			text-align: center;
+			margin: auto;
+			overflow: auto;
+			padding: 0; margin: 0;
+		}
+		.animated {
+			animation-duration: .9s;
+			animation-fill-mode: both;
+		}
+		@keyframes zoomIn {
+			from {
+				opacity: 0;
+				transform: scale3d(.3, .3, .3);
+			}
+
+			50% {
+				opacity: 1;
+			}
+		}
+		#box {
+			margin: auto;
+			background-color: #F1F1F1;
+			padding: 10px;
+		}
+		.seat-table {
+			margin: auto auto 20px auto;
+			padding: 0;
+			animation-name: zoomIn;
+		}
+		.seat-table tr td {
+			padding: 2px; margin: 0;
+		}
+
+		.seat-table tr td .seat {
+			display: block;
+			border: 1px solid #cccccc;
+			cursor: pointer;
+			background-color: #ffffff;
+		}
+
+		.seat-table tr td .selected {
+			background-color: #00cc00;
+		}
+	</style>
+</head>
+<body>
+	<div id="box">
+		<h1>大地影院 05 号厅座位表</h1>
+	</div>
+
+	<div class="container" style="margin-top: 10px;">
+		<button class="btn btn-primary btn-success">保存座位图</button>
+	</div>
+<script>
+	try {
+		var datas = JSON.parse(localStorage.getItem("seats"));
+		localStorage.setItem("seats", null);
+	} catch (e){}
+	var seats = $.seats({rows:20, cols:25, box:"#box", datas:datas});
+	$('.btn-primary').on('click', function() {
+		console.log(seats.getSeats());
+		localStorage.setItem("seats", JSON.stringify(seats.getSeats()));
+	});
+</script>
+</body>
+</html>
