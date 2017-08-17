@@ -4,7 +4,7 @@ body {
   overflow: auto;
   padding: 0;
   margin: 0; }
-  body .animated {
+  body .animated-seat {
     animation-duration: .9s;
     animation-fill-mode: both; }
 @keyframes zoomIn {
@@ -33,6 +33,8 @@ body {
       body #box .seat-table tr .selected {
         background-color: #00cc00; }
       body #box .seat-table tr .disabled {
-        color: #cc0000; }
+        background: url("checked.png") no-repeat center center;
+        background-size: 13px 13px !important;
+        border: 1px solid #cc0000 !important; }
 
 /*# sourceMappingURL=seat.css.map */

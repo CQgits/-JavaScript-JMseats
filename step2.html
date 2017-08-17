@@ -6,10 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>剧场排座插件</title>
 	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
-	<link rel="stylesheet" href="src/seat.css">
-	<link rel="stylesheet" href="plugin/spectrum.css">
+	<link rel="stylesheet" href="plugin/spectrum/spectrum.css">
 	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-	<script src="plugin/spectrum.js"></script>
+	<script src="plugin/spectrum/spectrum.js"></script>
+	<script src="plugin/jdialog/JDialog.min.js"></script>
 	<script src="src/seat.js"></script>
 
 </head>
@@ -45,6 +45,7 @@
 		seats.setPrice(price, color);
 		//更新座位信息
 		localStorage.setItem("seats", JSON.stringify(seats.getSeats()));
+		JDialog.msg({type:"ok", content:"更新票价成功.", container:"#box"});
 	});
 
 	$("#color").spectrum({

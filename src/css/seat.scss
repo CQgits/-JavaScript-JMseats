@@ -4,7 +4,7 @@ body {
 	overflow: auto;
 	padding: 0; margin: 0;
 
-	.animated {
+	.animated-seat {
 		animation-duration: .9s;
 		animation-fill-mode: both;
 	}
@@ -45,7 +45,9 @@ body {
 				}
 
 				.disabled {
-					color: #cc0000;
+					background: url("checked.png") no-repeat center center;
+					background-size: 13px 13px !important;
+					border: 1px solid #cc0000 !important;
 				}
 			}
 		}

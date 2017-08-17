@@ -6,8 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>剧场排座插件</title>
 	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
-	<link rel="stylesheet" href="src/seat.css">
 	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<script src="plugin/jdialog/JDialog.min.js"></script>
 	<script src="src/seat.js"></script>
 
 </head>
@@ -36,13 +36,10 @@
 		thre_id : 20, //剧场，如：大地电影院中天广场沃尔玛店
 		movie_id : 30, //场次ID
 		step:3,
+		maxTicketNumber : 5, //最多购票张数
 		datas:datas,
-		selected : selected,
+		selected : selected || {},
 		onSelected: function(seat) {
-			if($("#selected").find(".label-primary").length >= 5) {
-				alert("单个账号最多购买5张电影票");
-				return false;
-			}
 			var id = "selected_"+seat.row+"_"+seat.col;
 			var $dd = $('<label class="label label-primary" style="margin-right: 10px;" id="'+id+'">'+seat.row+'排'+seat.col+'座</label>');
 			var $close = $('<span aria-hidden="true" style="margin-left: 5px;">×</span>');
@@ -59,14 +56,19 @@
 		onUnselected : function(seat) {
 			var id = "selected_"+seat.row+"_"+seat.col;
 			$("#"+id).remove();
+		},
+		onerror : function(msg) {
+			JDialog.msg({type:'error', content:msg, container:"#box"});
 		}
 	});
 
 	$("#submit").on("click",function() {
 		console.log(seats.getSelectedSeats());
 		localStorage.setItem("selected", JSON.stringify(seats.getSelectedSeats()));
-		alert("购票成功");
-		location.reload();
+		JDialog.msg({type:'ok', content:"购票成功.", container:"#box"})
+		setTimeout(function(){
+			location.reload();
+		}, 2000);
 	});
 </script>
 </body>
