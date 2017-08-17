@@ -24,7 +24,12 @@
 
 	</div>
 <script>
-	var seats = $.seats({rows:30, cols:50, box:"#box", "step":1});
+	var seats = $.seats({
+		rows:20,
+		cols:30,
+		box:"#box",
+		"step":1
+	});
 	$('#save').on('click', function() {
 		console.log(seats.getSeats());
 		localStorage.setItem("seats", JSON.stringify(seats.getSeats()));

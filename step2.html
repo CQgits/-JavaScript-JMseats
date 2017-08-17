@@ -7,18 +7,21 @@
 	<title>剧场排座插件</title>
 	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="src/seat.css">
+	<link rel="stylesheet" href="plugin/spectrum.css">
 	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<script src="plugin/spectrum.js"></script>
 	<script src="src/seat.js"></script>
 
 </head>
 <body>
 	<div id="box">
-		<h1>大地影院 05 号厅座位表</h1>
+		<h1>设置座位票价和颜色</h1>
 	</div>
 
 	<div class="container" style="margin-top: 10px;">
 
 		<div class="form-inline">
+			<label>票价</label>
 			<input type="text" class="form-control" id="price" value="100" placeholder="票价">
 			<input type="text" class="form-control" id="color" value="#cc0000" placeholder="座位颜色">
 			<button class="btn btn-info" id="set-price">设置票价</button>
@@ -30,13 +33,24 @@
 	try {
 		var datas = JSON.parse(localStorage.getItem("seats"));
 	} catch (e){}
-	var seats = $.seats({rows:30, cols:50, box:"#box", step:2, datas:datas});
+	var seats = $.seats({
+		box:"#box",
+		step:2,
+		datas:datas
+	});
+
 	$('#set-price').on('click', function() {
 		var color = $('#color').val();
 		var price = $('#price').val();
 		seats.setPrice(price, color);
 		//更新座位信息
 		localStorage.setItem("seats", JSON.stringify(seats.getSeats()));
+	});
+
+	$("#color").spectrum({
+		change: function(color) {
+			$("#color").val(color.toHexString());
+		}
 	});
 </script>
 </body>

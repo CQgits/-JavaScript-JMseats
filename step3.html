@@ -13,27 +13,60 @@
 </head>
 <body>
 	<div id="box">
-		<h1>大地影院 05 号厅座位表</h1>
-		<h3 id="selected">已选座位：</h3>
+		<h1>购票页面</h1>
+		<h4 class="text-left" id="selected">已选座位：</h4>
+	</div>
+
+	<div class="container" style="margin-top: 10px;">
+
+		<div class="form-inline">
+			<button id="submit" class="btn btn-success">提交订单</button>
+		</div>
+
 	</div>
 
 <script>
 	try {
 		var datas = JSON.parse(localStorage.getItem("seats"));
+		var selected = JSON.parse(localStorage.getItem("selected"));
 	} catch (e){}
 	var seats = $.seats({
-		rows:30,
-		cols:50,
 		box:"#box",
 		hall_id : 10, //厅，如：5号厅
 		thre_id : 20, //剧场，如：大地电影院中天广场沃尔玛店
 		movie_id : 30, //场次ID
 		step:3,
 		datas:datas,
+		selected : selected,
 		onSelected: function(seat) {
-			$("#selected").append(seat.row+"排"+seat.col+"座，");
+			if($("#selected").find(".label-primary").length >= 5) {
+				alert("单个账号最多购买5张电影票");
+				return false;
+			}
+			var id = "selected_"+seat.row+"_"+seat.col;
+			var $dd = $('<label class="label label-primary" style="margin-right: 10px;" id="'+id+'">'+seat.row+'排'+seat.col+'座</label>');
+			var $close = $('<span aria-hidden="true" style="margin-left: 5px;">×</span>');
+			$close.on("click", function(){
+				$dd.remove();
+				seats.unselect(seat.row, seat.col);
+			});
+			$dd.append($close);
+
+			$("#selected").append($dd);
 			console.log(seat);
+			return true;
+		},
+		onUnselected : function(seat) {
+			var id = "selected_"+seat.row+"_"+seat.col;
+			$("#"+id).remove();
 		}
+	});
+
+	$("#submit").on("click",function() {
+		console.log(seats.getSelectedSeats());
+		localStorage.setItem("selected", JSON.stringify(seats.getSelectedSeats()));
+		alert("购票成功");
+		location.reload();
 	});
 </script>
 </body>

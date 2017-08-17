@@ -4,6 +4,21 @@
 
 (function($) {
 
+	//选中座位
+	$.fn.selectSeat = function() {
+		$(this).find('span').addClass("selected");
+	}
+
+	//取消选中座位
+	$.fn.unselectSeat = function() {
+		$(this).find('span').removeClass("selected");
+	}
+
+	//判断座位是否被选中
+	$.fn.hasSelected = function() {
+		return $(this).find('span').hasClass("selected");
+	}
+
 	var o = function(options) {
 
 		var defaults = {
@@ -17,6 +32,10 @@
 			onSelected : function(seat) { //选中座位时候的回调，仅当 step = 3(购票)时有效
 				console.log(seat);
 			},
+			onUnselected : function(seat) { //取消座位的时候回调
+				console.log(seat);
+			},
+			selected : {}, //已选中的座位
 			datas : {}
 		};
 		options = $.extend(defaults, options);
@@ -49,6 +68,7 @@
 					}
 				} catch (e) {}
 
+				//绑定选座事件
 				$td.on("click", function() {
 					$(this).find('span').toggleClass("selected");
 					var row = $(this).data('row'), col = $(this).data('col');
@@ -58,7 +78,7 @@
 					switch (options.step) {
 
 						case 1: //排座
-							if ( $(this).find('span').hasClass('selected') ) {
+							if ($(this).hasSelected()) {
 								seats[key] = {
 									"row" : row,
 									"col" : col,
@@ -74,23 +94,36 @@
 							break;
 
 						case 2:  //设置票价
-							if ( $(this).find('span').hasClass('selected') ) {
+							if ($(this).hasSelected()) {
 								seatColors[key] = 1;
 							} else {
 								delete seatColors[key];
 							}
+							console.log(seatColors);
 							break;
 
 						case 3: //购票
-							if (typeof options.onSelected == 'function') {
-								options.onSelected({
-									row : $(this).data("row"),
-									col : $(this).data("col"),
-									thre_id : $(this).data("thre_id"),
-									hall_id : $(this).data("hall_id"),
-									movie_id : $(this).data("movie_id"),
-									price : $(this).data("price"),
-								});
+							var seat = {
+								row : $(this).data("row"),
+								col : $(this).data("col"),
+								thre_id : $(this).data("thre_id"),
+								hall_id : $(this).data("hall_id"),
+								movie_id : $(this).data("movie_id"),
+								price : $(this).data("price"),
+							};
+							//出发选中事件
+							if ($(this).hasSelected()
+								&& typeof options.onSelected == 'function') {
+								if (options.onSelected(seat)){
+									options.selected[key] = 1;
+								} else {
+									$(this).unselectSeat(); //选座失败,状态回滚
+								}
+							}
+							//出发取消选中事件
+							if (!$(this).hasSelected()
+								&& typeof options.onUnselected == 'function') {
+								options.onUnselected(seat);
 							}
 							break;
 					}
@@ -103,6 +136,12 @@
 						"background" : "none"
 					});
 					$td.off("click"); //卸载事件
+				}
+
+				//处理已选中座位
+				if (options.step ==3 && options.selected && options.selected[sid]) {
+					$td.off("click"); //卸载事件
+					$seat.addClass("disabled").append('<i class="glyphicon glyphicon-ok-sign"></i>');
 				}
 
 				$td.append($seat);
@@ -141,6 +180,18 @@
 				$('#'+key).find("span").css({"border-color": color}).removeClass("selected");
 			}
 			seatColors = {}; //本次设置完毕，刷新缓存
+		}
+
+		//获取已选择的座位
+		o.prototype.getSelectedSeats = function() {
+			return options.selected;
+		}
+
+		//释放某个座位
+		o.prototype.unselect = function(row, col) {
+			var key = row+"_"+col;
+			delete options.selected[key];
+			$("#"+key).find('span').toggleClass("selected");
 		}
 
 		//获取对象元素个数
