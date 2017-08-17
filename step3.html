@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>剧场排座插件</title>
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="src/seat.css">
+	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<script src="src/seat.js"></script>
+
+</head>
+<body>
+	<div id="box">
+		<h1>大地影院 05 号厅座位表</h1>
+		<h3 id="selected">已选座位：</h3>
+	</div>
+
+<script>
+	try {
+		var datas = JSON.parse(localStorage.getItem("seats"));
+	} catch (e){}
+	var seats = $.seats({
+		rows:30,
+		cols:50,
+		box:"#box",
+		hall_id : 10, //厅，如：5号厅
+		thre_id : 20, //剧场，如：大地电影院中天广场沃尔玛店
+		movie_id : 30, //场次ID
+		step:3,
+		datas:datas,
+		onSelected: function(seat) {
+			$("#selected").append(seat.row+"排"+seat.col+"座，");
+			console.log(seat);
+		}
+	});
+</script>
+</body>
+</html>
