@@ -188,7 +188,7 @@
 		 */
 		o.setPrice = function(price, color) {
 			if ( seatColors.length == 0 ) {
-				return alert("你没有选中任何座位");
+				return options.onerror("你没有选中任何座位");
 			}
 			for (var key in seatColors) {
 				seats[key].color = color;
