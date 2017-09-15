@@ -6,4 +6,4 @@ seats
 
 在线演示
 ========
-### [http://r9it.com/demo/seats/](http://r9it.com/demo/seats/)
+### [演示地址] : http://d.r9it.com/seats/
